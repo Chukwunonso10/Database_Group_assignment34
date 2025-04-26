@@ -23,7 +23,107 @@ The ERD visually represents the structure of the database, showing the entities 
 
 ### Textual Representation
 
-Table product_category {category_id integer [primary key, increment]name varchardescription text}Table brand {brand_id integer [primary key, increment]name varcharlogo_url varchar}Table size_category {size_category_id integer [primary key, increment]name varchar}Table size_option {size_option_id integer [primary key, increment]size_category_id integersize_value varchar}Table color {color_id integer [primary key, increment]name varcharhex_code varchar}Table attribute_category {attribute_category_id integer [primary key, increment]name varchar}Table attribute_type {attribute_type_id integer [primary key, increment]attribute_category_id integername varchardata_type varchar}Table product {product_id integer [primary key, increment]category_id integerbrand_id integername varchardescription textbase_price decimal}Table product_variation {variation_id integer [primary key, increment]product_id integersize_option_id integercolor_id integersku varchar [unique]}Table product_item {item_id integer [primary key, increment]variation_id integerstock_quantity integerprice decimal}Table product_image {image_id integer [primary key, increment]item_id integerimage_url varcharalt_text varchar}Table product_attribute_value {product_attribute_value_id integer [primary key, increment]product_id integerattribute_type_id integervalue varchar}Ref: product.category_id > product_category.category_idRef: product.brand_id > brand.brand_idRef: product_variation.product_id > product.product_idRef: product_variation.size_option_id > size_option.size_option_idRef: product_variation.color_id > color.color_idRef: product_item.variation_id > product_variation.variation_idRef: product_image.item_id > product_item.item_idRef: size_option.size_category_id > size_category.size_category_idRef: product_attribute_value.product_id > product.product_idRef: product_attribute_value.attribute_type_id > attribute_type.attribute_type_idRef: attribute_type.attribute_category_id > attribute_category.attribute_category_id
+-- Create the product_category table
+CREATE TABLE product_category (
+    category_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    
+);
+
+-- Create the brand table
+CREATE TABLE brand (
+    brand_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    logo_url VARCHAR(2048)
+);
+
+-- Create the size_category table
+CREATE TABLE size_category (
+    size_category_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Create the size_option table
+CREATE TABLE size_option (
+    size_option_id INT AUTO_INCREMENT PRIMARY KEY,
+    size_category_id INT,
+    size_value VARCHAR(50) NOT NULL,
+    FOREIGN KEY (size_category_id) REFERENCES size_category(size_category_id)
+);
+
+-- Create the color table
+CREATE TABLE color (
+    color_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    hex_code VARCHAR(10) NOT NULL
+);
+
+-- Create the attribute_category table
+CREATE TABLE attribute_category (
+    attribute_category_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL
+);
+
+-- Create the attribute_type table
+CREATE TABLE attribute_type (
+    attribute_type_id INT AUTO_INCREMENT PRIMARY KEY,
+    attribute_category_id INT,
+    name VARCHAR(255) NOT NULL,
+    data_type VARCHAR(50) NOT NULL,
+    FOREIGN KEY (attribute_category_id) REFERENCES attribute_category(attribute_category_id)
+);
+
+-- Create the product table
+CREATE TABLE product (
+    product_id INT AUTO_INCREMENT PRIMARY KEY,
+    category_id INT,
+    brand_id INT,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    base_price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (category_id) REFERENCES product_category(category_id),
+    FOREIGN KEY (brand_id) REFERENCES brand(brand_id)
+);
+
+-- Create the product_variation table
+CREATE TABLE product_variation (
+    variation_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    size_option_id INT,
+    color_id INT,
+    FOREIGN KEY (product_id) REFERENCES product(product_id),
+    FOREIGN KEY (size_option_id) REFERENCES size_option(size_option_id),
+    FOREIGN KEY (color_id) REFERENCES color(color_id)
+);
+
+-- Create the product_item table
+CREATE TABLE product_item (
+    item_id INT AUTO_INCREMENT PRIMARY KEY,
+    variation_id INT,
+    stock_quantity INT NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (variation_id) REFERENCES product_variation(variation_id)
+);
+
+-- Create the product_image table
+CREATE TABLE product_image (
+    image_id INT AUTO_INCREMENT PRIMARY KEY,
+    item_id INT,
+    image_url VARCHAR(2048) NOT NULL,
+    alt_text VARCHAR(255),
+    FOREIGN KEY (item_id) REFERENCES product_item(item_id)
+);
+
+-- Create the product_attribute_value table
+CREATE TABLE product_attribute_value (
+    product_attribute_value_id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
+    attribute_type_id INT,
+    value VARCHAR(255) NOT NULL,
+    FOREIGN KEY (product_id) REFERENCES product(product_id),
+    FOREIGN KEY (attribute_type_id) REFERENCES attribute_type(attribute_type_id)
+);
+
 ## Database Schema (ecommerce.sql)
 
 The `ecommerce.sql` file contains the SQL statements to create the database schema, including tables, columns, data types, primary keys, and foreign keys.  It can be used to set up the database in a relational database management system (RDBMS) such as MySQL, PostgreSQL, or MariaDB.
