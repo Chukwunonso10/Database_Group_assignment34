@@ -156,7 +156,7 @@ Here's a brief description of the tables in the database:
 
 1.  Clone this repository to your local machine.
 2.  Use the `ecommerce.sql` file to create the database schema in your RDBMS.
-3.  The ERD is provided in both image (`Desktop/Database_groupAssignment/ecommerce_erd.png`) and textual format for reference.
+3.  The ERD is provided in both image (`Desktop/Database_groupAssignment/ERD.png`) and textual format for reference.
 
 ## Group Collaboration
 
