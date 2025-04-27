@@ -19,7 +19,7 @@ The database is designed to support the core functionality of an e-commerce plat
 The ERD visually represents the structure of the database, showing the entities (tables) and their relationships.
 
 ### Image
-![E-commerce ERD](ERD.png)
+![E-commerce ERD](ERD1.png)
 
 ### Textual Representation
 
